@@ -380,7 +380,7 @@ body::before {
 
 /* 4. 문제 컨테이너 - 꽉 찬 */
 .question-container {
-    flex: 1.5;
+    flex: 1.2; /* 1.5 → 1.2 (20% 감소) */
     background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(199, 146, 234, 0.1) 100%);
     border: 2px solid #a855f7;
     border-radius: 6px;
@@ -519,9 +519,9 @@ body::before {
     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
 }
 
-/* 6. 액션 버튼 - OX (두께 70% 증가) */
+/* 6. 액션 버튼 - OX (높이 증가) */
 .answer-actions {
-    height: 98px; /* 58px → 98px (69% 증가) */
+    height: 118px; /* 98px → 118px (20% 증가) */
     display: flex;
     gap: 4px;
     margin-top: 1px;
@@ -556,14 +556,14 @@ body::before {
 }
 
 .btn-icon {
-    font-size: 2.5rem; /* 1.8rem → 2.5rem (39% 증가) */
-    margin-bottom: 4px; /* 2px → 4px */
-    filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.3)); /* 2px → 3px */
+    font-size: 2.8rem; /* 2.5rem → 2.8rem (12% 증가) */
+    margin-bottom: 4px;
+    filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.3));
 }
 
 .btn-label {
-    font-size: 1.1rem; /* 0.85rem → 1.1rem (29% 증가) */
-    text-shadow: 0 2px 3px rgba(0, 0, 0, 0.5); /* 1px 2px → 2px 3px */
+    font-size: 1.2rem; /* 1.1rem → 1.2rem (9% 증가) */
+    text-shadow: 0 2px 3px rgba(0, 0, 0, 0.5);
 }
 
 .true-btn {
@@ -864,13 +864,13 @@ body::before {
     .timer-circle { width: 26px; height: 26px; }
     .timer-text { font-size: 0.75rem; }
     .answer-actions { 
-        height: 85px; /* 52px → 85px */
+        height: 102px; /* 85px → 102px (20% 증가) */
     }
     .btn-icon { 
-        font-size: 2rem; /* 1.6rem → 2rem */
+        font-size: 2.4rem; /* 2rem → 2.4rem (20% 증가) */
     }    
     .btn-label {
-        font-size: 0.95rem; /* 추가: 작은 화면에서도 적절히 */
+        font-size: 1.1rem; /* 0.95rem → 1.1rem (16% 증가) */
     }
     .start-title { font-size: 2rem; }
     .result-title { font-size: 1.6rem; }
@@ -879,9 +879,10 @@ body::before {
 @media (max-height: 600px) {
     .game-container { gap: 1px; }
     .battle-section { flex: 0.8; }
-    .question-container { flex: 1.3; }
-    .answer-actions { height: 85px; }
-}
+    .question-container { flex: 1.0; } /* 1.3 → 1.0 (높이 감소) */
+    .answer-actions { 
+        height: 102px; /* 85px → 102px (20% 증가) */
+    }}
 
 /* 가로 모드 대응 */
 @media (orientation: landscape) and (max-height: 500px) {
