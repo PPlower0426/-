@@ -152,7 +152,7 @@ const monsterDialogsByFloor = [
         'victory': ['이겼도다... 다음 층으로 가거라...', '승리로다... 계속 나아가라...'],
         'defeat': ['졌도다... 피를 주거라...', '패배로다... 처음부터 다시 하거라...'],
         'combo': ['콤보로다... 젊은 피의 힘 대단하구나...', '계속 맞추는구나... 대단하도다...'],
-        'potion': ['물약을 마셨구나... 피가 아닌 것을 마시다니...', '회복했구나... 피는 아니지만...']
+        'potion': ['물약을 마셨구나... 피가 아닌 것을 마시다니...', '회복했구나... 피는 아니하지만...']
     },
     { // 15층 - 찍맞의 지니 (소원 들어줌)
         'welcome': ['주인님! 소원을 들어드리겠습니다!', '환영합니다! 문제를 풀면 소원을!'],
@@ -221,6 +221,17 @@ const monsterDialogsByFloor = [
         'potion': ['물약 마셨구나... 약한 자의 습관...', '회복... 그래도 이기지 못할 거다...']
     }
 ];
+// 안전한 진동 호출 (CSP 문제를 줄이기 위해 중앙화)
+function safevibrate(pattern) {
+    try {
+        if (typeof navigator !== 'undefined' && navigator && typeof navigator.vibrate === 'function') {
+            navigator.vibrate(pattern);
+        }
+    } catch (e) {
+        // 진동 호출 실패해도 무시
+    }
+}
+
 // 몬스터 대사 선택 함수
 function getMonsterDialog(type) {
     // 현재 층수 확인 (0부터 시작하도록 조정)
@@ -419,9 +430,7 @@ function setupTouchEvents(element) {
     element.addEventListener('touchstart', function(e) {
         this.style.transform = 'scale(0.95)';
         // 진동 효과 (모바일에서만)
-        if (navigator.vibrate) {
-            navigator.vibrate(30);
-        }
+        safevibrate(30);
         if (e.cancelable) e.preventDefault();
     });
     
@@ -605,7 +614,7 @@ function generateMobileQuestion() {
             // 시간이 얼마 남지 않았을 때 효과
             const timerCircle = document.querySelector('.timer-circle');
             if (timerCircle) timerCircle.classList.add('vibrate');
-            if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+            safevibrate([100, 50, 100]);
         }
         
         if (timerCounter <= 0) {
@@ -678,9 +687,7 @@ function usePotion() {
     playSound('potion-sound');
     
     // 진동 효과
-    if (navigator.vibrate) {
-        navigator.vibrate([50, 100, 50]);
-    }
+    safevibrate([50, 100, 50]);
     
     // 힐 효과 애니메이션
     const healEffect = document.createElement('div');
@@ -767,9 +774,7 @@ function handleMobileAnswer(answer) {
     }
     
     // 진동 효과
-    if (navigator.vibrate) {
-        navigator.vibrate(isCorrect ? [100, 50, 100] : [200, 100, 200]);
-    }
+    safevibrate(isCorrect ? [100, 50, 100] : [200, 100, 200]);
     
     if (isCorrect) {
         // 정답 처리
@@ -788,9 +793,7 @@ function handleMobileAnswer(answer) {
             updateMonsterSpeech(`combo`);
             
             // 콤보 진동
-            if (navigator.vibrate) {
-                navigator.vibrate([50, 30, 50, 30, 50]);
-            }
+            safevibrate([50, 30, 50, 30, 50]);
         } else {
             updateMonsterSpeech('correct');
         }
@@ -869,9 +872,7 @@ function handleMobileTimeOut() {
     playSound('wrong-sound');
     
     // 강한 진동
-    if (navigator.vibrate) {
-        navigator.vibrate([300, 100, 300]);
-    }
+    safevibrate([300, 100, 300]);
     
     // 화면 흔들림
     const gameContainer = document.querySelector('.game-container');
@@ -907,9 +908,7 @@ function monsterDefeated() {
     playSound('correct-sound');
     
     // 강한 진동
-    if (navigator.vibrate) {
-        navigator.vibrate([100, 50, 100, 50, 200]);
-    }
+    safevibrate([100, 50, 100, 50, 200]);
     
     // 몬스터 폭발 애니메이션
     const monsterCircle = document.querySelector('.monster-circle');
@@ -932,9 +931,7 @@ function gameOver() {
     playSound('wrong-sound');
     
     // 강한 진동
-    if (navigator.vibrate) {
-        navigator.vibrate([500, 200, 500]);
-    }
+    safevibrate([500, 200, 500]);
     
     // 화면 붉은 효과
     const gameContainer = document.querySelector('.game-container');
