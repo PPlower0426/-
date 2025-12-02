@@ -1095,7 +1095,7 @@ function setupMobileEventListeners() {
         // 터치 이벤트도 확인
         startButton.addEventListener('touchstart', function(e) {
             console.log('시작 버튼 TOUCHSTART 이벤트 발생!', e);
-            e.preventDefault();
+             // e.preventDefault();
         });
         
         console.log('시작 버튼 이벤트 리스너 설정 완료');
