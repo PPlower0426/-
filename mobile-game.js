@@ -152,7 +152,7 @@ const monsterDialogsByFloor = [
         'victory': ['이겼도다... 다음 층으로 가거라...', '승리로다... 계속 나아가라...'],
         'defeat': ['졌도다... 피를 주거라...', '패배로다... 처음부터 다시 하거라...'],
         'combo': ['콤보로다... 젊은 피의 힘 대단하구나...', '계속 맞추는구나... 대단하도다...'],
-        'potion': ['물약을 마셨구나... 피가 아닌 것을 마시다니...', '회복했구나... 피는 아니하지만...']
+        'potion': ['물약을 마셨구나... 피가 아닌 것을 마시다니...', '회복했구나... 피는 아니지만...']
     },
     { // 15층 - 찍맞의 지니 (소원 들어줌)
         'welcome': ['주인님! 소원을 들어드리겠습니다!', '환영합니다! 문제를 풀면 소원을!'],
@@ -221,34 +221,21 @@ const monsterDialogsByFloor = [
         'potion': ['물약 마셨구나... 약한 자의 습관...', '회복... 그래도 이기지 못할 거다...']
     }
 ];
-// 안전한 진동 호출 (CSP 문제를 줄이기 위해 중앙화)
-function safevibrate(pattern) {
-    try {
-        if (typeof navigator !== 'undefined' && navigator && typeof navigator.vibrate === 'function') {
-            navigator.vibrate(pattern);
-        }
-    } catch (e) {
-        // 진동 호출 실패해도 무시
-    }
-}
 
 // 몬스터 대사 선택 함수
 function getMonsterDialog(type) {
-    // 현재 층수 확인 (0부터 시작하도록 조정)
     const floorIndex = Math.min(mobileGameState.currentFloor - 1, monsterDialogsByFloor.length - 1);
     const floorDialogs = monsterDialogsByFloor[floorIndex];
     
-    // 해당 층의 대사가 없거나 해당 타입의 대사가 없으면 기본 대사 사용
     if (!floorDialogs || !floorDialogs[type]) {
         return getDefaultDialog(type);
     }
     
     const dialogs = floorDialogs[type];
-    // 랜덤으로 하나 선택
     return dialogs[Math.floor(Math.random() * dialogs.length)];
 }
 
-// 기본 대사 (대사가 없을 때 사용)
+// 기본 대사
 function getDefaultDialog(type) {
     const defaultDialogs = {
         'welcome': '합격의 탑에 오신 것을 환영합니다!',
@@ -263,7 +250,8 @@ function getDefaultDialog(type) {
     };
     return defaultDialogs[type] || '...';
 }
-// 모바일 게임 로직 - 애니메이션 강화 버전
+
+// 모바일 게임 로직 - 진동 기능 완전 제거 버전
 
 // 게임 상태
 const mobileGameState = {
@@ -324,17 +312,13 @@ function initMobileGame() {
     console.log('합격의 탑 모바일 게임 초기화');
     gameInitialized = true;
     
-    // UI 업데이트
     updateMobileUI();
-    
-    // 이벤트 리스너 설정
     setupMobileEventListeners();
     
-    // 시작 화면 표시
     document.getElementById('start-screen').style.display = 'flex';
 }
 
-// 이벤트 리스너 설정 - 중복 방지 버전
+// 이벤트 리스너 설정
 function setupMobileEventListeners() {
     if (eventListenersSetup) {
         console.log('이벤트 리스너 이미 설정됨');
@@ -343,10 +327,8 @@ function setupMobileEventListeners() {
     
     console.log('이벤트 리스너 설정 시작');
     
-    // 시작 버튼
     const startButton = document.getElementById('start-button');
     if (startButton) {
-        // 기존 이벤트 리스너 제거 후 새로 등록
         startButton.removeEventListener('click', startMobileGame);
         startButton.addEventListener('click', function() {
             console.log('시작 버튼 클릭됨');
@@ -355,17 +337,14 @@ function setupMobileEventListeners() {
         setupTouchEvents(startButton);
     }
     
-    // OX 버튼
     const trueBtn = document.getElementById('true-btn');
     const falseBtn = document.getElementById('false-btn');
     
-    // O 버튼 클릭 핸들러
     function handleOClick() {
         console.log('O 버튼 클릭됨');
         handleMobileAnswer('O');
     }
     
-    // X 버튼 클릭 핸들러
     function handleXClick() {
         console.log('X 버튼 클릭됨');
         handleMobileAnswer('X');
@@ -383,7 +362,6 @@ function setupMobileEventListeners() {
         setupTouchEvents(falseBtn);
     }
     
-    // 포션 버튼
     const potionBtn = document.querySelector('.potion-display');
     if (potionBtn) {
         potionBtn.removeEventListener('click', usePotion);
@@ -391,17 +369,14 @@ function setupMobileEventListeners() {
         setupTouchEvents(potionBtn);
     }
     
-    // 결과 화면 버튼
     const nextBtn = document.getElementById('next-button');
     const retryBtn = document.getElementById('retry-button');
     
-    // 다음 층 버튼 핸들러
     function handleNextClick() {
         console.log('다음 층 버튼 클릭됨');
         nextMobileFloor();
     }
     
-    // 다시 시작 버튼 핸들러
     function handleRetryClick() {
         console.log('다시 시작 버튼 클릭됨');
         retryMobileGame();
@@ -423,14 +398,13 @@ function setupMobileEventListeners() {
     console.log('이벤트 리스너 설정 완료');
 }
 
-// 터치 이벤트 설정
+// 터치 이벤트 설정 - 진동 기능 완전 제거
 function setupTouchEvents(element) {
     if (!element) return;
     
     element.addEventListener('touchstart', function(e) {
         this.style.transform = 'scale(0.95)';
-        // 진동 효과 (모바일에서만)
-        safevibrate(30);
+        // 진동 기능 완전 제거됨
         if (e.cancelable) e.preventDefault();
     });
     
@@ -454,10 +428,8 @@ function startMobileGame() {
     gameStartInProgress = true;
     console.log('게임 시작');
     
-    // 시작 화면 숨기기
     document.getElementById('start-screen').style.display = 'none';
     
-    // 게임 상태 초기화
     mobileGameState.heroHP = 100;
     mobileGameState.heroMaxHP = 100;
     mobileGameState.monsterHP = 100;
@@ -470,13 +442,11 @@ function startMobileGame() {
     mobileGameState.isProcessing = false;
     mobileGameState.timer = 10.0;
     
-    // 기존 타이머 정리
     if (mobileGameState.timerInterval) {
         clearInterval(mobileGameState.timerInterval);
         mobileGameState.timerInterval = null;
     }
     
-    // 시작 애니메이션
     const gameContainer = document.querySelector('.game-container');
     gameContainer.classList.add('screen-shake');
     setTimeout(() => {
@@ -484,15 +454,12 @@ function startMobileGame() {
         gameStartInProgress = false;
     }, 500);
     
-    // 몬스터 초기화
     updateMobileMonster();
     
-    // 첫 문제 생성
     setTimeout(() => {
         generateMobileQuestion();
     }, 800);
     
-    // 말풍선 메시지
     updateMonsterSpeech('welcome');
 }
 
@@ -505,11 +472,9 @@ function updateMobileMonster() {
     mobileGameState.monsterMaxHP = monster.baseHP;
     mobileGameState.monsterHP = mobileGameState.monsterMaxHP;
     
-    // 몬스터 등장 애니메이션
     const monsterCircle = document.querySelector('.monster-circle');
     monsterCircle.style.animation = 'monsterPulse 1.5s infinite alternate, floatUpDown 2s infinite ease-in-out';
     
-    // UI 업데이트
     document.getElementById('monster-emoji').textContent = monster.emoji;
     document.getElementById('monster-name').textContent = monster.name;
     document.getElementById('monster-level').textContent = monster.level;
@@ -527,13 +492,11 @@ function generateMobileQuestion() {
     
     mobileGameState.isProcessing = true;
     
-    // 타이머 정리
     if (mobileGameState.timerInterval) {
         clearInterval(mobileGameState.timerInterval);
         mobileGameState.timerInterval = null;
     }
     
-    // questions.js에서 문제 가져오기
     let questionData;
     let questionCategory = '민법';
     
@@ -554,7 +517,6 @@ function generateMobileQuestion() {
         }
     }
     
-    // 기본 문제
     if (!questionData) {
         const defaultQuestions = [
             { question: "민법상 20세 미만의 미성년자는 법정대리인의 동의 없이 계약을 체결할 수 없다. (정답: O)", answer: "O" },
@@ -575,46 +537,30 @@ function generateMobileQuestion() {
     mobileGameState.currentQuestion = questionData;
     mobileGameState.timer = 10.0;
     
-    // 문제 등장 애니메이션
     const questionBox = document.querySelector('.question-box');
     questionBox.classList.add('vibrate');
     setTimeout(() => {
         questionBox.classList.remove('vibrate');
     }, 200);
     
-    // UI 업데이트
     document.getElementById('question-text').textContent = questionData.question;
     document.getElementById('question-type').textContent = questionData.category + ' 문제';
     document.getElementById('question-category').textContent = questionData.category;
     
     updateTimerDisplay();
     
-    // 랜덤한 몬스터 대사
-    const monsterSpeeches = [
-        "이 문제를 풀 수 있을까?",
-        "빨리 답해봐! 시간이 없어!",
-        "흠... 쉬운 문제인데?",
-        "이걸 틀리면 큰일이야!",
-        "집중해! 정답은 분명해!",
-        "빛의 속도로 답해줘!",
-        "정답을 알려줄까? 농담이야!",
-        "자... 여기까지 왔어!"
-    ];
-    
     updateMonsterSpeech('battle_start');
     
-    // 타이머 시작 (정수 카운터 방식으로 변경)
-    let timerCounter = 100; // 10.0초 = 100 * 0.1초
+    let timerCounter = 100;
     
     mobileGameState.timerInterval = setInterval(() => {
         timerCounter--;
         mobileGameState.timer = timerCounter / 10;
         
         if (timerCounter <= 30 && timerCounter > 29) {
-            // 시간이 얼마 남지 않았을 때 효과
             const timerCircle = document.querySelector('.timer-circle');
             if (timerCircle) timerCircle.classList.add('vibrate');
-            safevibrate([100, 50, 100]);
+            // 진동 기능 완전 제거됨
         }
         
         if (timerCounter <= 0) {
@@ -662,7 +608,7 @@ function updateTimerDisplay() {
     }
 }
 
-// 포션 사용 함수
+// 포션 사용 함수 - 진동 기능 완전 제거
 function usePotion() {
     if (mobileGameState.isProcessing || !mobileGameState.isBattleActive) return;
     if (mobileGameState.potions <= 0) {
@@ -676,20 +622,15 @@ function usePotion() {
     
     mobileGameState.isProcessing = true;
     
-    // 포션 사용
     mobileGameState.potions--;
     
-    // 체력 회복
     const healAmount = Math.min(30, mobileGameState.heroMaxHP - mobileGameState.heroHP);
     mobileGameState.heroHP += healAmount;
     
-    // 효과음 재생
     playSound('potion-sound');
     
-    // 진동 효과
-    safevibrate([50, 100, 50]);
+    // 진동 기능 완전 제거됨
     
-    // 힐 효과 애니메이션
     const healEffect = document.createElement('div');
     healEffect.className = 'heal-effect';
     document.body.appendChild(healEffect);
@@ -698,10 +639,8 @@ function usePotion() {
         healEffect.remove();
     }, 500);
     
-    // 힐 데미지 표시
     showDamageEffect(healAmount, 'hero', 'heal');
     
-    // 포션 애니메이션
     const potionDisplay = document.querySelector('.potion-display');
     if (potionDisplay) {
         potionDisplay.classList.add('explode');
@@ -710,10 +649,8 @@ function usePotion() {
         }, 500);
     }
     
-    // 대사
     updateMonsterSpeech('potion');
     
-    // UI 업데이트
     updateMobileUI();
     
     setTimeout(() => {
@@ -721,7 +658,7 @@ function usePotion() {
     }, 1000);
 }
 
-// 말풍선 업데이트 - 몬스터별 대사 적용 (수정된 버전)
+// 말풍선 업데이트
 function updateMonsterSpeech(type, customText = null) {
     const speechElement = document.getElementById('speech-text');
     if (!speechElement) return;
@@ -729,12 +666,11 @@ function updateMonsterSpeech(type, customText = null) {
     let text;
     
     if (customText) {
-        text = customText; // 커스텀 텍스트가 있으면 사용
+        text = customText;
     } else {
-        text = getMonsterDialog(type); // 몬스터별 대사 사용
+        text = getMonsterDialog(type);
     }
     
-    // 기존의 UI 업데이트 로직
     speechElement.style.opacity = '0';
     
     setTimeout(() => {
@@ -747,7 +683,7 @@ function updateMonsterSpeech(type, customText = null) {
     }, 150);
 }
 
-// 답변 처리
+// 답변 처리 - 진동 기능 완전 제거
 function handleMobileAnswer(answer) {
     if (mobileGameState.isProcessing || !mobileGameState.isBattleActive) {
         console.log('답변 처리 불가: 처리 중이거나 배틀 비활성');
@@ -756,7 +692,6 @@ function handleMobileAnswer(answer) {
     
     mobileGameState.isProcessing = true;
     
-    // 타이머 정리
     if (mobileGameState.timerInterval) {
         clearInterval(mobileGameState.timerInterval);
         mobileGameState.timerInterval = null;
@@ -764,7 +699,6 @@ function handleMobileAnswer(answer) {
     
     const isCorrect = (answer === mobileGameState.currentQuestion.answer);
     
-    // 버튼 클릭 애니메이션
     const clickedBtn = answer === 'O' ? document.getElementById('true-btn') : document.getElementById('false-btn');
     if (clickedBtn) {
         clickedBtn.classList.add('explode');
@@ -773,32 +707,26 @@ function handleMobileAnswer(answer) {
         }, 300);
     }
     
-    // 진동 효과
-    safevibrate(isCorrect ? [100, 50, 100] : [200, 100, 200]);
+    // 진동 기능 완전 제거됨
     
     if (isCorrect) {
-        // 정답 처리
         mobileGameState.combo++;
         mobileGameState.maxCombo = Math.max(mobileGameState.maxCombo, mobileGameState.combo);
         
         const damage = Math.floor(20 + mobileGameState.combo * 3);
         mobileGameState.monsterHP -= damage;
         
-        // 정답 효과음
         playSound('correct-sound');
         
-        // 콤보 효과
         if (mobileGameState.combo >= 3) {
             showComboEffect();
             updateMonsterSpeech(`combo`);
             
-            // 콤보 진동
-            safevibrate([50, 30, 50, 30, 50]);
+            // 진동 기능 완전 제거됨
         } else {
             updateMonsterSpeech('correct');
         }
         
-        // 몬스터 데미지 애니메이션
         const monsterCircle = document.querySelector('.monster-circle');
         if (monsterCircle) {
             monsterCircle.classList.add('screen-shake');
@@ -807,29 +735,23 @@ function handleMobileAnswer(answer) {
             }, 500);
         }
         
-        // 데미지 표시
         showDamageEffect(damage, 'monster');
         
-        // 몬스터 처치 체크
         if (mobileGameState.monsterHP <= 0) {
             mobileGameState.monsterHP = 0;
             monsterDefeated();
             return;
         }
     } else {
-        // 오답 처리
         mobileGameState.combo = 0;
         
         const damage = Math.floor(15 + (mobileGameState.currentFloor - 1) * 2);
         mobileGameState.heroHP -= damage;
         
-        // 오답 효과음
         playSound('wrong-sound');
         
-        // 히트 효과
         showDamageEffect(damage, 'hero');
         
-        // 화면 흔들림
         const gameContainer = document.querySelector('.game-container');
         if (gameContainer) {
             gameContainer.classList.add('screen-shake');
@@ -840,7 +762,6 @@ function handleMobileAnswer(answer) {
         
         updateMonsterSpeech('incorrect');
         
-        // 게임 오버 체크
         if (mobileGameState.heroHP <= 0) {
             mobileGameState.heroHP = 0;
             gameOver();
@@ -848,17 +769,15 @@ function handleMobileAnswer(answer) {
         }
     }
     
-    // UI 업데이트
     updateMobileUI();
     
-    // 다음 문제
     setTimeout(() => {
         mobileGameState.isProcessing = false;
         generateMobileQuestion();
     }, 1500);
 }
 
-// 시간 초과 처리
+// 시간 초과 처리 - 진동 기능 완전 제거
 function handleMobileTimeOut() {
     if (mobileGameState.isProcessing || !mobileGameState.isBattleActive) return;
     
@@ -868,13 +787,10 @@ function handleMobileTimeOut() {
     const damage = Math.floor(10 + (mobileGameState.currentFloor - 1) * 1.5);
     mobileGameState.heroHP -= damage;
     
-    // 시간 초과 효과음
     playSound('wrong-sound');
     
-    // 강한 진동
-    safevibrate([300, 100, 300]);
+    // 진동 기능 완전 제거됨
     
-    // 화면 흔들림
     const gameContainer = document.querySelector('.game-container');
     if (gameContainer) {
         gameContainer.classList.add('screen-shake');
@@ -900,17 +816,14 @@ function handleMobileTimeOut() {
     }, 1500);
 }
 
-// 몬스터 처치
+// 몬스터 처치 - 진동 기능 완전 제거
 function monsterDefeated() {
     mobileGameState.isBattleActive = false;
     
-    // 승리 효과음
     playSound('correct-sound');
     
-    // 강한 진동
-    safevibrate([100, 50, 100, 50, 200]);
+    // 진동 기능 완전 제거됨
     
-    // 몬스터 폭발 애니메이션
     const monsterCircle = document.querySelector('.monster-circle');
     if (monsterCircle) {
         monsterCircle.classList.add('explode');
@@ -923,17 +836,14 @@ function monsterDefeated() {
     }, 1500);
 }
 
-// 게임 오버
+// 게임 오버 - 진동 기능 완전 제거
 function gameOver() {
     mobileGameState.isBattleActive = false;
     
-    // 패배 효과음
     playSound('wrong-sound');
     
-    // 강한 진동
-    safevibrate([500, 200, 500]);
+    // 진동 기능 완전 제거됨
     
-    // 화면 붉은 효과
     const gameContainer = document.querySelector('.game-container');
     if (gameContainer) {
         gameContainer.classList.add('screen-shake');
@@ -958,13 +868,11 @@ function showResultScreen(type) {
     const nextBtn = document.getElementById('next-button');
     const retryBtn = document.getElementById('retry-button');
     
-    // 결과 데이터 설정
     document.getElementById('result-floor').textContent = mobileGameState.currentFloor + '층';
     document.getElementById('result-combo').textContent = mobileGameState.maxCombo + '회';
     document.getElementById('result-hp').textContent = mobileGameState.heroHP;
     document.getElementById('result-potions').textContent = mobileGameState.potions + '개';
     
-    // 결과 화면 애니메이션
     if (resultScreen) {
         resultScreen.classList.add('screen-shake');
         setTimeout(() => {
@@ -979,7 +887,6 @@ function showResultScreen(type) {
         if (nextBtn) nextBtn.style.display = 'flex';
         if (retryBtn) retryBtn.style.display = 'none';
         
-        // 승리 효과음
         playSound('correct-sound');
     } else {
         if (resultIcon) resultIcon.textContent = '💀';
@@ -1004,7 +911,6 @@ function nextMobileFloor() {
     nextFloorInProgress = true;
     console.log('다음 층으로 이동');
     
-    // 기존 타이머 정리
     if (mobileGameState.timerInterval) {
         clearInterval(mobileGameState.timerInterval);
         mobileGameState.timerInterval = null;
@@ -1015,17 +921,14 @@ function nextMobileFloor() {
     mobileGameState.isBattleActive = true;
     mobileGameState.isProcessing = false;
     
-    // 3층마다 포션 보상
     if (mobileGameState.currentFloor % 3 === 0) {
         mobileGameState.potions++;
         updateMonsterSpeech(`포션을 획득했다! (현재 ${mobileGameState.potions}개)`);
     }
     
-    // 체력 일부 회복 (최대 50%)
     const healAmount = Math.min(mobileGameState.heroMaxHP * 0.5, mobileGameState.heroMaxHP - mobileGameState.heroHP);
     mobileGameState.heroHP += healAmount;
     
-    // 층수 증가 애니메이션
     const floorNumber = document.getElementById('floor-number');
     if (floorNumber) {
         floorNumber.classList.add('explode');
@@ -1034,21 +937,17 @@ function nextMobileFloor() {
         }, 300);
     }
     
-    // 결과 화면 숨기기
     const resultScreen = document.getElementById('result-screen');
     if (resultScreen) {
         resultScreen.style.display = 'none';
     }
     
-    // 몬스터 업데이트
     setTimeout(() => {
         updateMobileMonster();
         
-        // 대사 업데이트
         const nextMonster = mobileMonsters[Math.min(mobileGameState.currentFloor - 1, mobileMonsters.length - 1)];
         updateMonsterSpeech('welcome', `${nextMonster.name}: ${getMonsterDialog('welcome')}`);
         
-        // 다음 문제 생성
         setTimeout(() => {
             generateMobileQuestion();
             nextFloorInProgress = false;
@@ -1066,13 +965,11 @@ function retryMobileGame() {
     retryInProgress = true;
     console.log('게임 다시 시작');
     
-    // 기존 타이머 정리
     if (mobileGameState.timerInterval) {
         clearInterval(mobileGameState.timerInterval);
         mobileGameState.timerInterval = null;
     }
     
-    // 게임 상태 초기화
     mobileGameState.heroHP = 100;
     mobileGameState.heroMaxHP = 100;
     mobileGameState.monsterHP = 100;
@@ -1085,50 +982,42 @@ function retryMobileGame() {
     mobileGameState.isProcessing = false;
     mobileGameState.timer = 10.0;
     
-    // 결과 화면 숨기기
     const resultScreen = document.getElementById('result-screen');
     if (resultScreen) {
         resultScreen.style.display = 'none';
     }
     
-    // 재시작 애니메이션
     const gameContainer = document.querySelector('.game-container');
     if (gameContainer) {
         gameContainer.classList.add('screen-shake');
         setTimeout(() => {
-            gameContainer.classList.remove('scr een-shake');
+            gameContainer.classList.remove('screen-shake');
         }, 500);
     }
     
-    // 몬스터 초기화
     setTimeout(() => {
         updateMobileMonster();
         
-        // 대사 업데이트
         updateMonsterSpeech('welcome');
         
-        // 문제 생성
         setTimeout(() => {
             generateMobileQuestion();
             retryInProgress = false;
-            gameStartInProgress = false; // 시작 플래그도 초기화
+            gameStartInProgress = false;
         }, 1000);
     }, 300);
 }
 
 // UI 업데이트
 function updateMobileUI() {
-    // HP 퍼센트 계산
     const heroHpPercent = (mobileGameState.heroHP / mobileGameState.heroMaxHP) * 100;
     const monsterHpPercent = (mobileGameState.monsterHP / mobileGameState.monsterMaxHP) * 100;
     
-    // HP 바 업데이트
     const heroHpFill = document.getElementById('hero-hp-fill');
     const monsterHpFill = document.getElementById('monster-hp-fill');
     
     if (heroHpFill) {
         heroHpFill.style.width = `${heroHpPercent}%`;
-        // 체력이 낮을 때 애니메이션
         if (heroHpPercent < 30) {
             heroHpFill.classList.add('vibrate');
         } else {
@@ -1140,7 +1029,6 @@ function updateMobileUI() {
         monsterHpFill.style.width = `${monsterHpPercent}%`;
     }
     
-    // HP 텍스트 업데이트
     const heroHpText = document.getElementById('hero-hp-text');
     const monsterHpText = document.getElementById('monster-hp-text');
     
@@ -1152,7 +1040,6 @@ function updateMobileUI() {
         monsterHpText.textContent = `${Math.max(0, mobileGameState.monsterHP)}/${mobileGameState.monsterMaxHP}`;
     }
     
-    // 상태 정보 업데이트
     const heroHpValue = document.getElementById('hero-hp-value');
     const comboValue = document.getElementById('combo-value');
     const potionCount = document.getElementById('potion-count');
@@ -1161,7 +1048,6 @@ function updateMobileUI() {
     if (comboValue) comboValue.textContent = mobileGameState.combo;
     if (potionCount) potionCount.textContent = mobileGameState.potions;
     
-    // 콤보에 따른 색상 효과
     if (comboValue) {
         if (mobileGameState.combo >= 5) {
             comboValue.style.color = '#ff4444';
@@ -1197,7 +1083,6 @@ function showDamageEffect(amount, target, type = 'damage') {
         popup.style.color = '#ff4444';
         popup.style.textShadow = '0 0 20px rgba(255, 68, 68, 1), 0 3px 6px rgba(0, 0, 0, 0.9)';
         
-        // 히트 효과
         const hitEffect = document.getElementById('hit-effect');
         if (hitEffect) {
             hitEffect.style.animation = 'none';
@@ -1233,7 +1118,7 @@ function playSound(soundId) {
         try {
             sound.currentTime = 0;
             sound.play().catch(e => {
-                // 오류 무시 (사용자가 음소거했을 수 있음)
+                // 오류 무시
             });
         } catch (e) {
             // 오류 무시
@@ -1245,7 +1130,6 @@ function playSound(soundId) {
 function quickInitialize() {
     console.log('빠른 초기화 시작');
     
-    // questionsData가 없으면 기본 데이터 생성
     if (typeof questionsData === 'undefined') {
         console.log('기본 문제 데이터 생성');
         window.questionsData = {
@@ -1259,7 +1143,6 @@ function quickInitialize() {
         };
     }
     
-    // 즉시 게임 초기화
     setTimeout(() => {
         if (!gameInitialized) {
             initMobileGame();
@@ -1271,7 +1154,6 @@ function quickInitialize() {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM 로드 완료');
     
-    // 빠른 초기화 실행
     quickInitialize();
 });
 
