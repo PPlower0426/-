@@ -983,3 +983,60 @@ body::before {
     opacity: 1;
     pointer-events: auto;
 }
+/* 로딩 표시 추가 */
+.question-box.loading::after {
+    content: '문제 로딩 중...';
+    display: block;
+    text-align: center;
+    color: #a3d9ff;
+    font-size: 0.9rem;
+    padding: 10px;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+/* 버튼 로딩 상태 */
+.button-loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* 즉각적인 버튼 피드백 */
+.action-btn:active {
+    transform: translateY(3px) scale(0.97);
+    box-shadow: 
+        0 1px 0 rgba(0, 0, 0, 0.4),
+        inset 0 0 10px rgba(255, 255, 255, 0.2);
+    transition: all 0.05s ease; /* 더 빠른 전환 */
+}
+
+/* 터치 최적화 */
+@media (hover: none) and (pointer: coarse) {
+    #start-button, #next-button, #retry-button, #true-btn, #false-btn, .potion-display {
+        min-height: 48px;
+        min-width: 48px;
+        touch-action: manipulation;
+    }
+    
+    .action-btn {
+        touch-action: manipulation;
+        -webkit-touch-callout: none;
+    }
+}
+
+/* 진동 효과가 있는 애니메이션 */
+.vibrate {
+    animation: vibrate 0.2s linear;
+}
+
+@keyframes vibrate {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-2px); }
+    40% { transform: translateX(2px); }
+    60% { transform: translateX(-1px); }
+    80% { transform: translateX(1px); }
+}
