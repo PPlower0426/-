@@ -222,21 +222,28 @@ function setupMobileEventListeners() {
     // 시작 버튼
     const startButton = document.getElementById('start-button');
     if (startButton) {
-        startButton.addEventListener('click', function() {
-            console.log('시작 버튼 클릭됨');
-            
-            // 시각적 피드백
-            this.classList.add('vibrate');
-            setTimeout(() => this.classList.remove('vibrate'), 200);
-            
-            // 진동 (사용자 상호작용 후)
-            safeVibrate(30);
-            
-            // 게임 시작
-            setTimeout(() => startMobileGame(), 50);
-        });
-        setupTouchEvents(startButton);
-    }
+    console.log('시작 버튼 DOM 찾음:', !!startButton);
+    
+    startButton.addEventListener('click', function(e) {
+        console.log('시작 버튼 CLICK 이벤트 발생!', e);
+        
+        this.classList.add('vibrate');
+        setTimeout(() => this.classList.remove('vibrate'), 200);
+        safeVibrate(30);
+        setTimeout(() => startMobileGame(), 50);
+    });
+    
+    // touchstart 이벤트에서 preventDefault 제거
+    startButton.addEventListener('touchstart', function(e) {
+        console.log('시작 버튼 TOUCHSTART 이벤트 발생!', e);
+        // e.preventDefault(); ← 제거!
+        this.style.transform = 'scale(0.95)';
+    });
+    
+    startButton.addEventListener('touchend', function() {
+        this.style.transform = 'scale(1)';
+    });
+}
     
     // OX 버튼
     const trueBtn = document.getElementById('true-btn');
@@ -335,8 +342,7 @@ function setupTouchEvents(element) {
     
     element.addEventListener('touchstart', function(e) {
         this.style.transform = 'scale(0.95)';
-        // 진동 제거 - setupMobileEventListeners에서 처리
-        if (e.cancelable) e.preventDefault();
+        // e.preventDefault() 제거! ← 이것이 핵심
     });
     
     element.addEventListener('touchend', function() {
