@@ -971,3 +971,15 @@ body::before {
         min-width: 44px;
     }
 }
+
+/* 버튼 표시 개선 */
+.button {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+}
+
+.button.show {
+    opacity: 1;
+    pointer-events: auto;
+}
