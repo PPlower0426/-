@@ -3,6 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self' https: data: blob:;
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' https:;
+    style-src 'self' 'unsafe-inline' https:;
+    img-src 'self' data: https:;
+    media-src 'self' https:;
+    font-src 'self' https:;
+    connect-src 'self' https:;
+">
     <title>합격의 탑 - 모바일</title>
     <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Gugi&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="mobile-style.css">
@@ -201,10 +210,10 @@
     <div class="combo-effect" id="combo-effect"></div>
     
     <!-- 사운드 -->
-    <audio id="correct-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3" preload="auto"></audio>
-    <audio id="wrong-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3" preload="auto"></audio>
-    <audio id="hit-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-arrow-whoosh-1491.mp3" preload="auto"></audio>
-    <audio id="potion-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-magic-sparkles-3007.mp3" preload="auto"></audio>
+    <audio id="correct-sound" src="sounds/correct.mp3" preload="auto"></audio>
+    <audio id="wrong-sound" src="sounds/wrong.mp3" preload="auto"></audio>
+    <audio id="hit-sound" src="sounds/hit.mp3" preload="auto"></audio>
+    <audio id="potion-sound" src="sounds/potion.mp3" preload="auto"></audio>
     
     <!-- 스크립트 -->
     <script src="questions.js"></script>
