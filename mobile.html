@@ -8,8 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Gugi&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="mobile-style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- game-data.json 프리로드 -->
-    <link rel="preload" href="game-data.json" as="fetch" crossorigin>
+    <!-- preload 링크 제거됨 -->
 </head>
 <body>
     <!-- 메인 게임 컨테이너 -->
@@ -48,7 +47,7 @@
                 <div class="speech-bubble">
                     <div class="speech-triangle"></div>
                     <div class="speech-content">
-                        <div class="speech-text" id="speech-text">게임 데이터 로드 중...</div>
+                        <div class="speech-text" id="speech-text">게임 로드 완료! 시작 버튼을 눌러주세요.</div>
                     </div>
                 </div>
             </div>
@@ -59,7 +58,7 @@
             <div class="status-item">
                 <span class="status-icon">📚</span>
                 <span class="status-label">문제</span>
-                <span class="status-value" id="question-category">로드 중</span>
+                <span class="status-value" id="question-category">준비됨</span>
             </div>
             <div class="status-item">
                 <span class="status-icon">❤️</span>
@@ -81,11 +80,11 @@
         <!-- 4. 문제 박스 -->
         <div class="question-container">
             <div class="question-header">
-                <div class="question-type" id="question-type">로드 중...</div>
+                <div class="question-type" id="question-type">준비 완료</div>
             </div>
             <div class="question-box">
                 <div class="question-text" id="question-text">
-                    게임을 시작하려면 아래 시작 버튼을 누르세요.
+                    합격의 탑 모바일 버전에 오신 것을 환영합니다! 게임을 시작하려면 시작 버튼을 눌러주세요.
                 </div>
             </div>
         </div>
@@ -212,18 +211,6 @@
     <!-- 스크립트 -->
     <script src="questions.js"></script>
     <script src="mobile-game.js"></script>
-    
-    <!-- 로딩 완료 메시지 -->
-    <script>
-        // 게임 데이터 로드 완료 확인
-        setTimeout(() => {
-            if (document.getElementById('speech-text').textContent === '게임 데이터 로드 중...') {
-                document.getElementById('speech-text').textContent = '게임 로드 완료! 시작 버튼을 눌러주세요.';
-                document.getElementById('question-text').textContent = '합격의 탑 모바일 버전에 오신 것을 환영합니다! 게임을 시작하려면 시작 버튼을 눌러주세요.';
-                document.getElementById('question-type').textContent = '준비 완료';
-                document.getElementById('question-category').textContent = '준비됨';
-            }
-        }, 2000);
-    </script>
+    <script src="device-detector.js"></script>
 </body>
 </html>
