@@ -1,259 +1,4 @@
-// 몬스터 대사 - 각 층별로 다른 대사
-const monsterDialogsByFloor = [
-    { // 1층 - 진입 문지기 (쾌활함)
-        'welcome': ['합격의 탑에 오신 것을 환영합니다! 즐겁게 게임해요!', '첫 관문을 통과해봐요!'],
-        'battle_start': ['자, 시작해볼까요? 정답을 맞춰보세요!', '문제를 해결해봐요!'],
-        'correct': ['정답이에요! 잘 하시네요!', '맞췄어요! 대단해요!'],
-        'incorrect': ['아쉽네요! 다시 도전해보세요!', '틀렸어요! 힘내요!'],
-        'timeout': ['시간이 다 됐어요! 더 빠르게 답해보세요!', '시간 초과! 다음엔 더 빨리!'],
-        'victory': ['제가 졌네요! 다음 층으로 가세요!', '이겼어요! 다음 층이 기다리고 있어요!'],
-        'defeat': ['이번에는 제가 이겼어요! 다시 도전하세요!', '패배했어요! 처음부터 다시!'],
-        'combo': ['와우! 연속으로 맞추시네요!', '콤보 대단해요!'],
-        'potion': ['물약을 드셨네요! 힘내세요!', '회복했어요! 잘 했어요!']
-    },
-    { // 2층 - 독서실 빌런 (짜증냄)
-        'welcome': ['아... 또 왔어? 빨리빨리 해.', '제발 조용히 해...'],
-        'battle_start': ['시작한다... 빨리 끝내자.', '문제나 빨리 풀어.'],
-        'correct': ['어... 맞았네.', '정답인데... 짜증나.'],
-        'incorrect': ['역시 틀렸지. 예상했어.', '틀렸어. 당연히.'],
-        'timeout': ['시간 다 됐어. 답답해.', '너무 느려. 짜증나.'],
-        'victory': ['쳇... 이겼네. 다음 층 가.', '이긴 건 축하해. 빨리 가.'],
-        'defeat': ['내가 이겼지. 당연해.', '패배야. 다시 시작해.'],
-        'combo': ['계속 맞추네... 짜증나.', '콤보? 그만해.'],
-        'potion': ['물약 마셨구나. 별거 아니야.', '회복했네. 어쩌라고.']
-    },
-    { // 3층 - 담보물권 삐에로 (계속 웃음)
-        'welcome': ['하하하! 환영합니다! 즐거운 게임 되세요!', '호호호! 첫 번째 관문입니다!'],
-        'battle_start': ['헤헤헤! 문제를 풀어보세요!', '하하! 정답을 맞춰보세요!'],
-        'correct': ['하하하! 정답입니다! 잘했어요!', '호호호! 맞췄어요! 재미있죠?'],
-        'incorrect': ['히히히! 틀렸어요! 다시 시도해보세요!', '하하! 틀렸네요! 웃기죠?'],
-        'timeout': ['하하하! 시간 초과! 더 빨리!', '호호호! 너무 느려요!'],
-        'victory': ['하하하! 제가 졌어요! 다음 층으로!', '호호호! 이겼어요! 축하해요!'],
-        'defeat': ['하하하! 제가 이겼어요! 다시 도전하세요!', '히히히! 패배했어요! 웃기죠?'],
-        'combo': ['와하하! 콤보 대단해요!', '하하하! 계속 맞추고 있어요!'],
-        'potion': ['하하! 물약 마셨구나! 힘내!', '호호! 회복했네! 잘했어!']
-    },
-    { // 4층 - 귀여운 애기 귀신 (칭구야~)
-        'welcome': ['칭구야~ 환영해!', '어서와~ 즐거운 게임 하자!'],
-        'battle_start': ['칭구야~ 문제 풀어봐!', '자, 시작해볼까?'],
-        'correct': ['칭구야~ 정답이야! 잘했어!', '맞췄어~ 대단해!'],
-        'incorrect': ['칭구야~ 틀렸어...', '아쉽다~ 다시 해봐!'],
-        'timeout': ['칭구야~ 시간 다 됐어!', '너무 느려~ 빨리해!'],
-        'victory': ['칭구야~ 이겼어! 다음 층 가!', '이겼다~ 축하해!'],
-        'defeat': ['칭구야~ 졌어... 다시 해봐!', '패배야~ 힘내!'],
-        'combo': ['와~ 칭구야 콤보 대단해!', '계속 맞추고 있네~ 대단해!'],
-        'potion': ['칭구야~ 물약 마셨구나!', '회복했네~ 잘했어!']
-    },
-    { // 5층 - 점심 굶은 고시생 (배고파....)
-        'welcome': ['배고파.... 환영한다...', '오셨군... 배고프다...'],
-        'battle_start': ['시작... 배고픈데...', '문제 풀어... 빨리...'],
-        'correct': ['맞았다... 근데 배고파...', '정답... 밥 먹고 싶다...'],
-        'incorrect': ['틀렸다... 배고픈데...', '오답... 힘들다...'],
-        'timeout': ['시간 다 됐다... 배고파...', '느리다... 밥 주세요...'],
-        'victory': ['이겼다... 다음 층... 밥...', '승리... 배고픈 승리다...'],
-        'defeat': ['졌다... 배고파서 졌어...', '패배... 밥 생각나...'],
-        'combo': ['콤보... 배고픈 콤보...', '계속 맞추네... 배고프다...'],
-        'potion': ['물약... 배고픈 건 못 고쳐...', '회복... 밥은 안 주나...']
-    },
-    { // 6층 - 그냥 용 (아무 말 없음)
-        'welcome': ['...', '...'],
-        'battle_start': ['...', '...'],
-        'correct': ['...', '...'],
-        'incorrect': ['...', '...'],
-        'timeout': ['...', '...'],
-        'victory': ['...', '...'],
-        'defeat': ['...', '...'],
-        'combo': ['...', '...'],
-        'potion': ['...', '...']
-    },
-    { // 7층 - 17학번 공룡 선배 (아재개그함)
-        'welcome': ['와! 새내기 왔구먼! 아재 개그 하나 할까?', '옛날에 변리사 시험은... 하하!'],
-        'battle_start': ['자, 시작한다! 문제가 공룡처럼 어렵다?', '풀어봐! 공룡도 풀 수 있어!'],
-        'correct': ['정답! 공룡도 알아듣겠다!', '맞췄어! 내가 봐도 대단해!'],
-        'incorrect': ['틀렸어! 공룡 시대에도 틀렸을 걸?', '오답! 공룡이 웃을 거야!'],
-        'timeout': ['시간 초과! 공룡도 더 빨랐다!', '느려! 공룡 시대에도 느렸어!'],
-        'victory': ['이겼다! 공룡 선배 인정!', '승리! 다음 층으로 가!'],
-        'defeat': ['졌어! 공룡 시대에도 졌을 걸?', '패배! 다시 도전해!'],
-        'combo': ['콤보! 공룡도 놀랐다!', '계속 맞추네! 대단해!'],
-        'potion': ['물약 마셨구나! 공룡도 마셨을까?', '회복! 공룡도 회복했어!']
-    },
-    { // 8층 - 조금 큰 물고기 (잡아먹어버린다)
-        'welcome': ['여기서 죽으면 잡아먹어버린다...', '물고기에게 잡아먹히고 싶지 않으면...'],
-        'battle_start': ['문제를 풀어라... 안 풀면 먹는다...', '시작한다... 배고프다...'],
-        'correct': ['정답이다... 아쉽게도 못 먹겠다...', '맞췄어... 다음 기회에...'],
-        'incorrect': ['틀렸어... 이제 먹을 수 있겠다...', '오답... 맛있겠다...'],
-        'timeout': ['시간 다 됐다... 식사 시간이다...', '느려... 쉽게 잡히겠다...'],
-        'victory': ['이겼다... 배고픈 상태로 보내준다...', '승리... 다음 층으로 가라...'],
-        'defeat': ['졌다... 이제 먹을 시간이다...', '패배... 맛있는 고기다...'],
-        'combo': ['콤보... 살이 쪘겠다...', '계속 맞추네... 살이 올랐다...'],
-        'potion': ['물약 마셨구나... 살이 더 올랐다...', '회복... 맛있어지겠다...']
-    },
-    { // 9층 - 게임중독 고시생 (게임이 하고 싶다...)
-        'welcome': ['게임... 하고 싶다...', '공부 말고 게임하고 싶어...'],
-        'battle_start': ['문제 풀어... 게임처럼 빨리...', '시작... 게임 시작...'],
-        'correct': ['정답... 게임 클리어...', '맞췄어... 레벨 업...'],
-        'incorrect': ['틀렸어... 게임 오버...', '오답... 다시 시도...'],
-        'timeout': ['시간 초과... 게임처럼 빨리 해...', '느려... 게임 빨리해...'],
-        'victory': ['이겼다... 다음 스테이지...', '승리... 보상 획득...'],
-        'defeat': ['졌다... 게임 오버...', '패배... 컨티뉴...'],
-        'combo': ['콤보... 연속 처치...', '계속 맞추네... 콤보 유지...'],
-        'potion': ['물약 마셨구나... 체력 회복...', '회복... 게임처럼...']
-    },
-    { // 10층 - 생동차 변리사 기계 (삐빅)
-        'welcome': ['삐빅! 환영합니다.', '삐빅! 합격의 탑 10층입니다.'],
-        'battle_start': ['삐빅! 전투 시작합니다.', '삐빅! 문제 풀이 시작.'],
-        'correct': ['삐빅! 정답입니다.', '삐빅! 맞췄습니다.'],
-        'incorrect': ['삐빅! 오답입니다.', '삐빅! 틀렸습니다.'],
-        'timeout': ['삐빅! 시간 초과입니다.', '삐빅! 너무 느립니다.'],
-        'victory': ['삐빅! 승리했습니다.', '삐빅! 다음 층으로 이동합니다.'],
-        'defeat': ['삐빅! 패배했습니다.', '삐빅! 처음부터 다시 시작하세요.'],
-        'combo': ['삐빅! 콤보 중입니다.', '삐빅! 연속 정답입니다.'],
-        'potion': ['삐빅! 물약 사용했습니다.', '삐빅! 체력 회복 중입니다.']
-    },
-    { // 11층 - 12수 고시생 (...)
-        'welcome': ['.........', '.............'],
-        'battle_start': ['.....', '.......'],
-        'correct': ['.....', '.......'],
-        'incorrect': ['.....', '.......'],
-        'timeout': ['.....', '.......'],
-        'victory': ['.....', '.......'],
-        'defeat': ['.....', '.......'],
-        'combo': ['.....', '.......'],
-        'potion': ['.....', '.......']
-    },
-    { // 12층 - 술취한 아저씨 (술취한 말투)
-        'welcome': ['어.. 왔네? 한잔 할까?', '환.. 환영한다! 술 마시자!'],
-        'battle_start': ['자.. 시작한다! 취한 상태로 풀어봐!', '문.. 문제 풀어! 취해서 풀어!'],
-        'correct': ['정.. 정답이네! 술이 깨겠다!', '맞.. 맞췄어! 한잔 더!'],
-        'incorrect': ['틀.. 틀렸어! 술이 문제야!', '오.. 오답! 취해서 그렇지!'],
-        'timeout': ['시.. 시간 다 됐어! 취해서 느려!', '너.. 너무 느려! 술 깨고 해!'],
-        'victory': ['이.. 이겼다! 다음 층 가서 마시자!', '승.. 승리! 술 한잔 하러!'],
-        'defeat': ['졌.. 졌어! 술 때문에 졌지!', '패.. 패배! 술 마시고 다시!'],
-        'combo': ['콤.. 콤보 대단해! 술 깨겠다!', '계.. 계속 맞추네! 대단해!'],
-        'potion': ['물.. 물약 마셨구나! 술 대신!', '회.. 회복! 술이 회복제!']
-    },
-    { // 13층 - 그냥 고시생 (좀비같음)
-        'welcome': ['으어... 왔느냐...', '공부... 계속 해야 한다...'],
-        'battle_start': ['문제... 풀어라...', '시작... 빨리...'],
-        'correct': ['정답... 계속...', '맞췄다... 다음...'],
-        'incorrect': ['틀렸다... 지친다...', '오답... 힘들다...'],
-        'timeout': ['시간... 다 됐다...', '느리다... 빨리...'],
-        'victory': ['이겼다... 다음 층...', '승리... 계속 가야 한다...'],
-        'defeat': ['졌다... 다시...', '패배... 처음부터...'],
-        'combo': ['콤보... 계속 맞춘다...', '연속... 정답...'],
-        'potion': ['물약... 마셨다...', '회복... 조금 나아졌다...']
-    },
-    { // 14층 - 초동안 40세 고시생 (드라큘라 컨셉)
-        'welcome': ['흐흐... 어서 오라, 젊은 피여...', '합격의 탑에 온 걸 환영한다...'],
-        'battle_start': ['문제를 풀어보거라... 피가 마르기 전에...', '시작한다... 시간은 적다...'],
-        'correct': ['정답이로다... 잘 했도다...', '맞췄구나... 젊은 피의 힘인가...'],
-        'incorrect': ['틀렸도다... 피가 더 필요하겠구나...', '오답이로다... 실망이로다...'],
-        'timeout': ['시간이 다 됐도다... 너무 느리구나...', '시간 초과로다... 피가 식겠구나...'],
-        'victory': ['이겼도다... 다음 층으로 가거라...', '승리로다... 계속 나아가라...'],
-        'defeat': ['졌도다... 피를 주거라...', '패배로다... 처음부터 다시 하거라...'],
-        'combo': ['콤보로다... 젊은 피의 힘 대단하구나...', '계속 맞추는구나... 대단하도다...'],
-        'potion': ['물약을 마셨구나... 피가 아닌 것을 마시다니...', '회복했구나... 피는 아니지만...']
-    },
-    { // 15층 - 찍맞의 지니 (소원 들어줌)
-        'welcome': ['주인님! 소원을 들어드리겠습니다!', '환영합니다! 문제를 풀면 소원을!'],
-        'battle_start': ['문제를 풀어주세요! 정답이 소원입니다!', '시작합니다! 소원을 위해!'],
-        'correct': ['정답입니다! 소원 하나 들어드릴게요!', '맞췄어요! 소원이 뭔가요?'],
-        'incorrect': ['틀렸어요... 소원은 다음 기회에...', '오답이에요... 아쉽지만...'],
-        'timeout': ['시간 다 됐어요! 소원은 빨리!', '너무 느려요! 소원도 느리게?'],
-        'victory': ['이겼어요! 소원 들어드릴게요!', '승리! 다음 층으로 소원과 함께!'],
-        'defeat': ['졌어요... 소원은 다음에...', '패배... 소원은 이루어지지 않았어요...'],
-        'combo': ['콤보 대단해요! 소원 많이 들어드릴게요!', '계속 맞추네요! 대단해요!'],
-        'potion': ['물약 마셨구나! 소원은 건강이죠!', '회복했어요! 소원이 이루어졌네요!']
-    },
-    { // 16층 - 할로위인 (낄낄 거림)
-        'welcome': ['낄낄낄! 환영한다!', '하하하! 무서운 게임 시작이다!'],
-        'battle_start': ['낄낄! 문제 풀어봐!', '하하! 시작한다!'],
-        'correct': ['낄낄낄! 정답이다!', '하하하! 맞췄어!'],
-        'incorrect': ['낄낄! 틀렸어!', '하하! 오답이야!'],
-        'timeout': ['낄낄낄! 시간 다 됐어!', '하하하! 너무 느려!'],
-        'victory': ['낄낄! 이겼다! 다음 층!', '하하! 승리다!'],
-        'defeat': ['낄낄! 졌어! 다시 해!', '하하! 패배야!'],
-        'combo': ['낄낄낄! 콤보 대단해!', '하하하! 계속 맞추네!'],
-        'potion': ['낄낄! 물약 마셨구나!', '하하! 회복했네!']
-    },
-    { // 17층 - 한번더 피닉스 (불사조)
-        'welcome': ['나는 불사조! 죽지 않는다!', '다시 왔다! 올해도 시험 보러 왔다!'],
-        'battle_start': ['시작한다! 나는 죽지 않아!', '문제 풀어봐! 나는 계속 돌아온다!'],
-        'correct': ['정답! 나처럼 다시 살아난다!', '맞췄어! 불사조의 승리!'],
-        'incorrect': ['틀렸어! 하지만 나는 다시 온다!', '오답! 다음에 다시 맞출 것이다!'],
-        'timeout': ['시간 다 됐다! 나는 기다릴 수 있다!', '너무 느려! 나는 영원히 기다린다!'],
-        'victory': ['이겼다! 하지만 나는 다시 올 것이다!', '승리! 내년에 다시 보자!'],
-        'defeat': ['졌다! 하지만 나는 죽지 않는다!', '패배! 다음에 다시 도전한다!'],
-        'combo': ['콤보! 나처럼 계속 돌아온다!', '계속 맞추네! 불사조처럼!'],
-        'potion': ['물약 마셨구나! 나는 스스로 회복한다!', '회복! 나는 불사조니까!']
-    },
-    { // 18층 - 외계인 (재수없음)
-        'welcome': ['지구인... 재수없게 왔구나...', '외계에서 왔다... 너희는 초보자...'],
-        'battle_start': ['문제 풀어봐... 쉽지 않을 거다...', '시작한다... 지구인 수준이겠지...'],
-        'correct': ['정답... 운이 좋았을 뿐...', '맞췄어... 다음은 틀릴 거다...'],
-        'incorrect': ['틀렸어... 예상했지...', '오답... 지구인 수준...'],
-        'timeout': ['시간 다 됐어... 느린 지구인...', '너무 느려... 외계인은 더 빠르다...'],
-        'victory': ['이겼다... 운이 좋았을 뿐...', '승리... 다음 층 가라...'],
-        'defeat': ['졌다... 지구인 주제에...', '패배... 재수없는 지구인...'],
-        'combo': ['콤보... 운이 계속 좋구나...', '계속 맞추네... 이상하네...'],
-        'potion': ['물약 마셨구나... 약한 지구인...', '회복... 필요할 때 마시는구나...']
-    },
-    { // 19층 - 뒤통수 머신 (뒤통수를 때림)
-        'welcome': ['뒤통수 준비해라...', '조심해... 뒤통수 맞을 준비해...'],
-        'battle_start': ['시작한다... 뒤통수 조심해...', '문제 풀어... 틀리면 뒤통수 맞아...'],
-        'correct': ['정답... 다음엔 뒤통수 때린다...', '맞췄어... 일단 넘어가자...'],
-        'incorrect': ['틀렸어... 뒤통수 때린다!', '오답... 준비해라!'],
-        'timeout': ['시간 다 됐어... 뒤통수 맞을 시간!', '너무 느려... 뒤통수 한 대!'],
-        'victory': ['이겼다... 뒤통수 때리지 않고 보내준다...', '승리... 다음 층으로...'],
-        'defeat': ['졌다... 뒤통수 맞을 시간이다!', '패배... 뒤통수 때린다!'],
-        'combo': ['콤보... 뒤통수 안 때린다...', '계속 맞추네... 뒤통수 때리기 아까워...'],
-        'potion': ['물약 마셨구나... 뒤통수 치료제?', '회복... 뒤통수 때리기 전에...']
-    },
-    { // 20층 - 대마왕 (무시하고 비하)
-        'welcome': ['흥... 또 지루한 도전자군...', '합격의 탑 최종보스... 나다...'],
-        'battle_start': ['시작한다... 빨리 끝내자...', '문제 풀어... 너 따위가 풀 수 있을까...'],
-        'correct': ['정답... 운이 좋았을 뿐...', '맞췄어... 다음은 틀릴 거다...'],
-        'incorrect': ['틀렸어... 예상했지...', '오답... 너 따위가 맞출 수 있을까...'],
-        'timeout': ['시간 다 됐어... 느린 자...', '너무 느려... 어리석은 자...'],
-        'victory': ['이겼다... 대마왕을 이기다니...', '승리... 하지만 다음에 만나면...'],
-        'defeat': ['졌다... 너 따위에게...', '패배... 수치다...'],
-        'combo': ['콤보... 계속 운이 좋구나...', '계속 맞추네... 이상하네...'],
-        'potion': ['물약 마셨구나... 약한 자의 습관...', '회복... 그래도 이기지 못할 거다...']
-    }
-];
-// 몬스터 대사 선택 함수
-function getMonsterDialog(type) {
-    // 현재 층수 확인 (0부터 시작하도록 조정)
-    const floorIndex = Math.min(mobileGameState.currentFloor - 1, monsterDialogsByFloor.length - 1);
-    const floorDialogs = monsterDialogsByFloor[floorIndex];
-    
-    // 해당 층의 대사가 없거나 해당 타입의 대사가 없으면 기본 대사 사용
-    if (!floorDialogs || !floorDialogs[type]) {
-        return getDefaultDialog(type);
-    }
-    
-    const dialogs = floorDialogs[type];
-    // 랜덤으로 하나 선택
-    return dialogs[Math.floor(Math.random() * dialogs.length)];
-}
-
-// 기본 대사 (대사가 없을 때 사용)
-function getDefaultDialog(type) {
-    const defaultDialogs = {
-        'welcome': '합격의 탑에 오신 것을 환영합니다!',
-        'battle_start': '문제를 풀어보세요!',
-        'correct': '정답입니다!',
-        'incorrect': '틀렸습니다!',
-        'timeout': '시간 초과!',
-        'victory': '승리했습니다!',
-        'defeat': '패배했습니다!',
-        'combo': '콤보!',
-        'potion': '포션을 사용했습니다!'
-    };
-    return defaultDialogs[type] || '...';
-}
-// 모바일 게임 로직 - 애니메이션 강화 버전
-
+// 합격의 탑 모바일 게임 - 최적화 버전
 // 게임 상태
 const mobileGameState = {
     heroHP: 100,
@@ -272,36 +17,154 @@ const mobileGameState = {
     currentMonster: 0
 };
 
-// 몬스터 데이터
-const mobileMonsters = [
-    { emoji: '👹', name: '진입 문지기', level: 'Lv.1', baseHP: 100 },
-    { emoji: '👿', name: '독서실 빌런', level: 'Lv.2', baseHP: 120 },
-    { emoji: '🤡', name: '담보물권 삐에로', level: 'Lv.3', baseHP: 150 },
-    { emoji: '👻', name: '귀여운 애기 귀신', level: 'Lv.4', baseHP: 180 },
-    { emoji: '💀', name: '점심 굶은 고시생', level: 'Lv.5', baseHP: 220 },
-    { emoji: '🐉', name: '그냥 용', level: 'Lv.6', baseHP: 270 },
-    { emoji: '🦖', name: '17학번 공룡 선배', level: 'Lv.7', baseHP: 330 },
-    { emoji: '🦈', name: '조금 큰 물고기', level: 'Lv.8', baseHP: 400 },
-    { emoji: '👾', name: '게임중독 고시생', level: 'Lv.9', baseHP: 480 },
-    { emoji: '🤖', name: '생동차 변리사 기계', level: 'Lv.10', baseHP: 570 },
-    { emoji: '☠️', name: '12수 고시생', level: 'Lv.11', baseHP: 670 },
-    { emoji: '👺', name: '술취한 아저씨', level: 'Lv.12', baseHP: 790 },
-    { emoji: '🧟', name: '그냥 고시생', level: 'Lv.13', baseHP: 930 },
-    { emoji: '🧛', name: '초동안 40세 고시생', level: 'Lv.14', baseHP: 1090 },
-    { emoji: '🧞', name: '찍맞의 지니', level: 'Lv.15', baseHP: 1270 },
-    { emoji: '🎃', name: '할로위인', level: 'Lv.16', baseHP: 1470 },
-    { emoji: '🐦‍🔥', name: '한번더 피닉스', level: 'Lv.17', baseHP: 1700 },
-    { emoji: '👽', name: '외계인', level: 'Lv.18', baseHP: 1960 },
-    { emoji: '🧌', name: '뒤통수 머신', level: 'Lv.19', baseHP: 2250 },
-    { emoji: '🦹', name: '대마왕', level: 'Lv.20', baseHP: 2570 }
-];
-
-// 전역 상태 변수
+// 전역 변수
+let mobileMonsters = [];
+let monsterDialogsByFloor = [];
+let gameDataLoaded = false;
 let gameInitialized = false;
 let eventListenersSetup = false;
 let gameStartInProgress = false;
 let nextFloorInProgress = false;
 let retryInProgress = false;
+let questionCache = [];
+
+// 기본 몬스터 데이터 (최소한의 데이터)
+const defaultMonsters = [
+    { emoji: '👹', name: '진입 문지기', level: 'Lv.1', baseHP: 100 },
+    { emoji: '👿', name: '독서실 빌런', level: 'Lv.2', baseHP: 120 }
+];
+
+// 기본 대사
+const defaultDialogs = {
+    'welcome': '합격의 탑에 오신 것을 환영합니다!',
+    'battle_start': '문제를 풀어보세요!',
+    'correct': '정답입니다!',
+    'incorrect': '틀렸습니다!',
+    'timeout': '시간 초과!',
+    'victory': '승리했습니다!',
+    'defeat': '패배했습니다!',
+    'combo': '콤보!',
+    'potion': '포션을 사용했습니다!'
+};
+
+// 게임 데이터 로드 함수
+function loadGameData() {
+    return new Promise((resolve, reject) => {
+        // 이미 로드되었으면 바로 반환
+        if (gameDataLoaded) {
+            resolve();
+            return;
+        }
+        
+        console.log('게임 데이터 로드 시작...');
+        
+        // 로딩 표시
+        if (document.getElementById('speech-text')) {
+            document.getElementById('speech-text').textContent = '게임 데이터 로드 중...';
+        }
+        
+        fetch('game-data.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('게임 데이터 로드 실패');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('게임 데이터 로드 완료');
+                
+                // monsters 데이터 설정
+                if (data.monsters && Array.isArray(data.monsters) && data.monsters.length > 0) {
+                    mobileMonsters = data.monsters;
+                } else {
+                    mobileMonsters = defaultMonsters;
+                }
+                
+                // dialogs 데이터 설정
+                if (data.dialogs && Array.isArray(data.dialogs) && data.dialogs.length > 0) {
+                    monsterDialogsByFloor = data.dialogs;
+                }
+                
+                gameDataLoaded = true;
+                resolve();
+            })
+            .catch(error => {
+                console.warn('게임 데이터 로드 실패, 기본 데이터 사용:', error);
+                // 실패 시 기본 데이터 사용
+                mobileMonsters = defaultMonsters;
+                monsterDialogsByFloor = [];
+                gameDataLoaded = true;
+                resolve();
+            });
+    });
+}
+
+// 문제 미리 로드 함수
+function preloadQuestions() {
+    console.log('문제 미리 로드 시작');
+    
+    questionCache = [];
+    
+    // questions.js에서 문제 캐싱
+    if (typeof questionsData !== 'undefined') {
+        const categories = Object.keys(questionsData);
+        
+        categories.forEach(category => {
+            const questions = questionsData[category];
+            if (questions && questions.length > 0) {
+                questions.forEach(q => {
+                    questionCache.push({
+                        category: category,
+                        question: q.question,
+                        answer: q.answer
+                    });
+                });
+            }
+        });
+        
+        console.log(`문제 ${questionCache.length}개 미리 로드 완료`);
+    } else {
+        // 기본 문제 생성
+        questionCache = [
+            { category: '민법', question: "민법상 20세 미만의 미성년자는 법정대리인의 동의 없이 계약을 체결할 수 없다. (정답: O)", answer: "O" },
+            { category: '민법', question: "특허권의 존속기간은 출원일로부터 20년이다. (정답: O)", answer: "O" },
+            { category: '민법', question: "상표권은 등록 없이도 사용만으로 권리가 발생한다. (정답: X)", answer: "X" },
+            { category: '민법', question: "실용신안권의 존속기간은 출원일로부터 10년이다. (정답: O)", answer: "O" },
+            { category: '민법', question: "디자인권은 등록 후 15년간 보호된다. (정답: O)", answer: "O" }
+        ];
+        console.log('기본 문제 5개 생성 완료');
+    }
+    
+    return questionCache.length > 0;
+}
+
+// 몬스터 대사 선택 함수
+function getMonsterDialog(type) {
+    // 현재 층수 확인
+    const floorIndex = mobileGameState.currentFloor - 1;
+    
+    // 게임 데이터가 로드되었고, 해당 층의 대사가 있으면 사용
+    if (gameDataLoaded && monsterDialogsByFloor.length > 0) {
+        const floorDialogs = monsterDialogsByFloor.find(dialog => dialog.floor === mobileGameState.currentFloor);
+        
+        if (floorDialogs && floorDialogs[type]) {
+            const dialogs = floorDialogs[type];
+            if (Array.isArray(dialogs) && dialogs.length > 0) {
+                return dialogs[Math.floor(Math.random() * dialogs.length)];
+            } else if (typeof dialogs === 'string') {
+                return dialogs;
+            }
+        }
+    }
+    
+    // 기본 대사 반환
+    return getDefaultDialog(type);
+}
+
+// 기본 대사
+function getDefaultDialog(type) {
+    return defaultDialogs[type] || '...';
+}
 
 // 게임 초기화
 function initMobileGame() {
@@ -321,9 +184,12 @@ function initMobileGame() {
     
     // 시작 화면 표시
     document.getElementById('start-screen').style.display = 'flex';
+    
+    // 게임 데이터 로드 시작 (백그라운드에서)
+    loadGameData();
 }
 
-// 이벤트 리스너 설정 - 중복 방지 버전
+// 이벤트 리스너 설정
 function setupMobileEventListeners() {
     if (eventListenersSetup) {
         console.log('이벤트 리스너 이미 설정됨');
@@ -335,11 +201,18 @@ function setupMobileEventListeners() {
     // 시작 버튼
     const startButton = document.getElementById('start-button');
     if (startButton) {
-        // 기존 이벤트 리스너 제거 후 새로 등록
-        startButton.removeEventListener('click', startMobileGame);
         startButton.addEventListener('click', function() {
             console.log('시작 버튼 클릭됨');
-            startMobileGame();
+            
+            // 즉시 진동 효과
+            if (navigator.vibrate) navigator.vibrate(30);
+            
+            // 시각적 피드백
+            this.classList.add('vibrate');
+            setTimeout(() => this.classList.remove('vibrate'), 200);
+            
+            // 게임 시작
+            setTimeout(() => startMobileGame(), 50);
         });
         setupTouchEvents(startButton);
     }
@@ -350,24 +223,46 @@ function setupMobileEventListeners() {
     
     // O 버튼 클릭 핸들러
     function handleOClick() {
+        if (mobileGameState.isProcessing || !mobileGameState.isBattleActive) {
+            console.log('답변 처리 불가: 처리 중이거나 배틀 비활성');
+            return;
+        }
+        
         console.log('O 버튼 클릭됨');
-        handleMobileAnswer('O');
+        
+        // 즉시 진동 효과
+        if (navigator.vibrate) navigator.vibrate(30);
+        trueBtn.classList.add('vibrate');
+        setTimeout(() => trueBtn.classList.remove('vibrate'), 200);
+        
+        // 답변 처리
+        setTimeout(() => handleMobileAnswer('O'), 10);
     }
     
     // X 버튼 클릭 핸들러
     function handleXClick() {
+        if (mobileGameState.isProcessing || !mobileGameState.isBattleActive) {
+            console.log('답변 처리 불가: 처리 중이거나 배틀 비활성');
+            return;
+        }
+        
         console.log('X 버튼 클릭됨');
-        handleMobileAnswer('X');
+        
+        // 즉시 진동 효과
+        if (navigator.vibrate) navigator.vibrate(30);
+        falseBtn.classList.add('vibrate');
+        setTimeout(() => falseBtn.classList.remove('vibrate'), 200);
+        
+        // 답변 처리
+        setTimeout(() => handleMobileAnswer('X'), 10);
     }
     
     if (trueBtn) {
-        trueBtn.removeEventListener('click', handleOClick);
         trueBtn.addEventListener('click', handleOClick);
         setupTouchEvents(trueBtn);
     }
     
     if (falseBtn) {
-        falseBtn.removeEventListener('click', handleXClick);
         falseBtn.addEventListener('click', handleXClick);
         setupTouchEvents(falseBtn);
     }
@@ -375,8 +270,20 @@ function setupMobileEventListeners() {
     // 포션 버튼
     const potionBtn = document.querySelector('.potion-display');
     if (potionBtn) {
-        potionBtn.removeEventListener('click', usePotion);
-        potionBtn.addEventListener('click', usePotion);
+        potionBtn.addEventListener('click', function() {
+            if (mobileGameState.isProcessing || !mobileGameState.isBattleActive) {
+                console.log('포션 사용 불가: 처리 중이거나 배틀 비활성');
+                return;
+            }
+            
+            // 즉시 진동 효과
+            if (navigator.vibrate) navigator.vibrate(50);
+            this.classList.add('vibrate');
+            setTimeout(() => this.classList.remove('vibrate'), 200);
+            
+            // 포션 사용
+            setTimeout(() => usePotion(), 10);
+        });
         setupTouchEvents(potionBtn);
     }
     
@@ -387,23 +294,35 @@ function setupMobileEventListeners() {
     // 다음 층 버튼 핸들러
     function handleNextClick() {
         console.log('다음 층 버튼 클릭됨');
-        nextMobileFloor();
+        
+        // 즉시 진동 효과
+        if (navigator.vibrate) navigator.vibrate(50);
+        nextBtn.classList.add('vibrate');
+        setTimeout(() => nextBtn.classList.remove('vibrate'), 200);
+        
+        // 다음 층 이동
+        setTimeout(() => nextMobileFloor(), 50);
     }
     
     // 다시 시작 버튼 핸들러
     function handleRetryClick() {
         console.log('다시 시작 버튼 클릭됨');
-        retryMobileGame();
+        
+        // 즉시 진동 효과
+        if (navigator.vibrate) navigator.vibrate(50);
+        retryBtn.classList.add('vibrate');
+        setTimeout(() => retryBtn.classList.remove('vibrate'), 200);
+        
+        // 다시 시작
+        setTimeout(() => retryMobileGame(), 50);
     }
     
     if (nextBtn) {
-        nextBtn.removeEventListener('click', handleNextClick);
         nextBtn.addEventListener('click', handleNextClick);
         setupTouchEvents(nextBtn);
     }
     
     if (retryBtn) {
-        retryBtn.removeEventListener('click', handleRetryClick);
         retryBtn.addEventListener('click', handleRetryClick);
         setupTouchEvents(retryBtn);
     }
@@ -418,10 +337,10 @@ function setupTouchEvents(element) {
     
     element.addEventListener('touchstart', function(e) {
         this.style.transform = 'scale(0.95)';
-        // 진동 효과 (모바일에서만)
-        if (navigator.vibrate) {
-            navigator.vibrate(30);
-        }
+        // 진동 호출 제거 (사용자 상호작용 전에는 차단됨)
+        // if (navigator.vibrate) {
+        //     navigator.vibrate(30);
+        // }
         if (e.cancelable) e.preventDefault();
     });
     
@@ -467,13 +386,15 @@ function startMobileGame() {
         mobileGameState.timerInterval = null;
     }
     
+    // 문제 미리 로드
+    preloadQuestions();
+    
     // 시작 애니메이션
     const gameContainer = document.querySelector('.game-container');
     gameContainer.classList.add('screen-shake');
     setTimeout(() => {
         gameContainer.classList.remove('screen-shake');
-        gameStartInProgress = false;
-    }, 500);
+    }, 300);
     
     // 몬스터 초기화
     updateMobileMonster();
@@ -481,7 +402,8 @@ function startMobileGame() {
     // 첫 문제 생성
     setTimeout(() => {
         generateMobileQuestion();
-    }, 800);
+        gameStartInProgress = false;
+    }, 500);
     
     // 말풍선 메시지
     updateMonsterSpeech('welcome');
@@ -489,10 +411,21 @@ function startMobileGame() {
 
 // 몬스터 업데이트
 function updateMobileMonster() {
-    const monsterIndex = Math.min(mobileGameState.currentFloor - 1, mobileMonsters.length - 1);
-    const monster = mobileMonsters[monsterIndex];
+    let monster;
     
-    mobileGameState.currentMonster = monsterIndex;
+    // 게임 데이터가 로드되었는지 확인
+    if (gameDataLoaded && mobileMonsters.length > 0) {
+        const monsterIndex = Math.min(mobileGameState.currentFloor - 1, mobileMonsters.length - 1);
+        monster = mobileMonsters[monsterIndex];
+        mobileGameState.currentMonster = monsterIndex;
+    } else {
+        // 기본 몬스터 사용
+        const monsterIndex = Math.min(mobileGameState.currentFloor - 1, defaultMonsters.length - 1);
+        monster = defaultMonsters[monsterIndex];
+        mobileGameState.currentMonster = monsterIndex;
+    }
+    
+    // 몬스터 체력 설정
     mobileGameState.monsterMaxHP = monster.baseHP;
     mobileGameState.monsterHP = mobileGameState.monsterMaxHP;
     
@@ -524,42 +457,18 @@ function generateMobileQuestion() {
         mobileGameState.timerInterval = null;
     }
     
-    // questions.js에서 문제 가져오기
     let questionData;
-    let questionCategory = '민법';
     
-    if (typeof questionsData !== 'undefined') {
-        const categories = Object.keys(questionsData);
-        if (categories.length > 0) {
-            questionCategory = categories[Math.floor(Math.random() * categories.length)];
-            const questions = questionsData[questionCategory];
-            
-            if (questions && questions.length > 0) {
-                const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
-                questionData = {
-                    category: questionCategory,
-                    question: randomQuestion.question,
-                    answer: randomQuestion.answer
-                };
-            }
-        }
-    }
-    
-    // 기본 문제
-    if (!questionData) {
-        const defaultQuestions = [
-            { question: "민법상 20세 미만의 미성년자는 법정대리인의 동의 없이 계약을 체결할 수 없다. (정답: O)", answer: "O" },
-            { question: "특허권의 존속기간은 출원일로부터 20년이다. (정답: O)", answer: "O" },
-            { question: "상표권은 등록 없이도 사용만으로 권리가 발생한다. (정답: X)", answer: "X" },
-            { question: "실용신안권의 존속기간은 출원일로부터 10년이다. (정답: O)", answer: "O" },
-            { question: "디자인권은 등록 후 15년간 보호된다. (정답: O)", answer: "O" }
-        ];
-        
-        const randomQuestion = defaultQuestions[Math.floor(Math.random() * defaultQuestions.length)];
+    // 캐시된 문제에서 선택
+    if (questionCache.length > 0) {
+        const randomIndex = Math.floor(Math.random() * questionCache.length);
+        questionData = questionCache[randomIndex];
+    } else {
+        // 캐시가 없으면 즉시 기본 문제 생성
         questionData = {
             category: '민법',
-            question: randomQuestion.question,
-            answer: randomQuestion.answer
+            question: "민법상 20세 미만의 미성년자는 법정대리인의 동의 없이 계약을 체결할 수 없다. (정답: O)",
+            answer: "O"
         };
     }
     
@@ -580,22 +489,11 @@ function generateMobileQuestion() {
     
     updateTimerDisplay();
     
-    // 랜덤한 몬스터 대사
-    const monsterSpeeches = [
-        "이 문제를 풀 수 있을까?",
-        "빨리 답해봐! 시간이 없어!",
-        "흠... 쉬운 문제인데?",
-        "이걸 틀리면 큰일이야!",
-        "집중해! 정답은 분명해!",
-        "빛의 속도로 답해줘!",
-        "정답을 알려줄까? 농담이야!",
-        "자... 여기까지 왔어!"
-    ];
-    
+    // 몬스터 대사
     updateMonsterSpeech('battle_start');
     
-    // 타이머 시작 (정수 카운터 방식으로 변경)
-    let timerCounter = 100; // 10.0초 = 100 * 0.1초
+    // 타이머 시작
+    let timerCounter = 100;
     
     mobileGameState.timerInterval = setInterval(() => {
         timerCounter--;
@@ -714,7 +612,7 @@ function usePotion() {
     }, 1000);
 }
 
-// 말풍선 업데이트 - 몬스터별 대사 적용 (수정된 버전)
+// 말풍선 업데이트
 function updateMonsterSpeech(type, customText = null) {
     const speechElement = document.getElementById('speech-text');
     if (!speechElement) return;
@@ -722,12 +620,11 @@ function updateMonsterSpeech(type, customText = null) {
     let text;
     
     if (customText) {
-        text = customText; // 커스텀 텍스트가 있으면 사용
+        text = customText;
     } else {
-        text = getMonsterDialog(type); // 몬스터별 대사 사용
+        text = getMonsterDialog(type);
     }
     
-    // 기존의 UI 업데이트 로직
     speechElement.style.opacity = '0';
     
     setTimeout(() => {
@@ -785,7 +682,7 @@ function handleMobileAnswer(answer) {
         // 콤보 효과
         if (mobileGameState.combo >= 3) {
             showComboEffect();
-            updateMonsterSpeech(`combo`);
+            updateMonsterSpeech('combo');
             
             // 콤보 진동
             if (navigator.vibrate) {
@@ -978,7 +875,7 @@ function showResultScreen(type) {
     if (type === 'victory') {
         if (resultIcon) resultIcon.textContent = '🏆';
         if (resultTitle) resultTitle.textContent = '승리!';
-        if (resultDetails) resultDetails.textContent = `${mobileMonsters[mobileGameState.currentMonster].name}을(를) 물리쳤습니다!`;
+        if (resultDetails) resultDetails.textContent = getMonsterName() + '을(를) 물리쳤습니다!';
         if (nextBtn) nextBtn.style.display = 'flex';
         if (retryBtn) retryBtn.style.display = 'none';
         
@@ -987,13 +884,24 @@ function showResultScreen(type) {
     } else {
         if (resultIcon) resultIcon.textContent = '💀';
         if (resultTitle) resultTitle.textContent = '패배!';
-        if (resultDetails) resultDetails.textContent = `${mobileGameState.currentFloor}층에서 실패했습니다.`;
+        if (resultDetails) resultDetails.textContent = mobileGameState.currentFloor + '층에서 실패했습니다.';
         if (nextBtn) nextBtn.style.display = 'none';
         if (retryBtn) retryBtn.style.display = 'flex';
     }
     
     if (resultScreen) {
         resultScreen.style.display = 'flex';
+    }
+}
+
+// 몬스터 이름 가져오기
+function getMonsterName() {
+    if (gameDataLoaded && mobileMonsters.length > 0) {
+        const monsterIndex = Math.min(mobileGameState.currentMonster, mobileMonsters.length - 1);
+        return mobileMonsters[monsterIndex].name;
+    } else {
+        const monsterIndex = Math.min(mobileGameState.currentMonster, defaultMonsters.length - 1);
+        return defaultMonsters[monsterIndex].name;
     }
 }
 
@@ -1021,7 +929,7 @@ function nextMobileFloor() {
     // 3층마다 포션 보상
     if (mobileGameState.currentFloor % 3 === 0) {
         mobileGameState.potions++;
-        updateMonsterSpeech(`포션을 획득했다! (현재 ${mobileGameState.potions}개)`);
+        updateMonsterSpeech('potion', `포션을 획득했다! (현재 ${mobileGameState.potions}개)`);
     }
     
     // 체력 일부 회복 (최대 50%)
@@ -1048,8 +956,7 @@ function nextMobileFloor() {
         updateMobileMonster();
         
         // 대사 업데이트
-        const nextMonster = mobileMonsters[Math.min(mobileGameState.currentFloor - 1, mobileMonsters.length - 1)];
-        updateMonsterSpeech('welcome', `${nextMonster.name}: ${getMonsterDialog('welcome')}`);
+        updateMonsterSpeech('welcome');
         
         // 다음 문제 생성
         setTimeout(() => {
@@ -1099,7 +1006,7 @@ function retryMobileGame() {
     if (gameContainer) {
         gameContainer.classList.add('screen-shake');
         setTimeout(() => {
-            gameContainer.classList.remove('scr een-shake');
+            gameContainer.classList.remove('screen-shake');
         }, 500);
     }
     
@@ -1114,7 +1021,7 @@ function retryMobileGame() {
         setTimeout(() => {
             generateMobileQuestion();
             retryInProgress = false;
-            gameStartInProgress = false; // 시작 플래그도 초기화
+            gameStartInProgress = false;
         }, 1000);
     }, 300);
 }
@@ -1248,7 +1155,7 @@ function playSound(soundId) {
 function quickInitialize() {
     console.log('빠른 초기화 시작');
     
-    // questionsData가 없으면 기본 데이터 생성
+    // 1. questionsData가 없으면 기본 데이터 생성
     if (typeof questionsData === 'undefined') {
         console.log('기본 문제 데이터 생성');
         window.questionsData = {
@@ -1262,12 +1169,15 @@ function quickInitialize() {
         };
     }
     
-    // 즉시 게임 초기화
+    // 2. 게임 데이터 비동기 로드 시작
+    loadGameData();
+    
+    // 3. 게임 초기화
     setTimeout(() => {
         if (!gameInitialized) {
             initMobileGame();
         }
-    }, 50);
+    }, 100);
 }
 
 // DOM 로드 완료 시 게임 초기화
